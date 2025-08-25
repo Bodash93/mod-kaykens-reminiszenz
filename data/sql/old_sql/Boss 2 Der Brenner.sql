@@ -1,0 +1,2 @@
+INSERT INTO creature_names (entry, name, subname, type, rank, male_displayid) VALUES ('500013', 'Gorleax', 'Der Brenner 500013', '9', '1', '9189');
+INSERT INTO creature_proto (entry, minlevel, maxlevel, faction, minhealth, maxhealth, mana, scale, npcflags, attacktime, attacktype, mindamage, maxdamage, respawntime, armor, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, auras, boss, money) VALUES ('500013', '83', '83', '14', '75000', '75000', '50000', '1,10', '0', '2000', '9', '300', '300', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0');

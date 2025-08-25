@@ -1,0 +1,2 @@
+INSERT INTO creature_names (entry, name, subname, type, rank, male_displayid) VALUES ('50009', 'Versklavte Todeskralle', '50009', '2', '1', '14544');
+INSERT INTO creature_proto (entry, minlevel, maxlevel, faction, minhealth, maxhealth, mana, scale, npcflags, attacktime, attacktype, mindamage, maxdamage, respawntime, armor, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, auras, boss, money) VALUES ('50009', '82', '82', '14', '50000', '50000', '0', '1,50', '0', '2000', '2', '200', '200', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0');

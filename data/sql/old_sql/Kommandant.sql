@@ -1,0 +1,2 @@
+INSERT INTO creature_names (entry, name, subname, type, rank, male_displayid) VALUES ('50004', 'Kommandant des Schwarzfels', '50004', '7', '1', '9696');
+INSERT INTO creature_proto (entry, minlevel, maxlevel, faction, minhealth, maxhealth, mana, scale, npcflags, attacktime, attacktype, mindamage, maxdamage, respawntime, armor, resistance1, resistance2, resistance3, resistance4, resistance5, resistance6, auras, boss, money) VALUES ('50004', '81', '81', '14', '25000', '25000', '0', '1', '0', '1800', '7', '100', '100', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0');
