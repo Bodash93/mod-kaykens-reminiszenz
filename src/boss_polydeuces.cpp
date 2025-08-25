@@ -5,14 +5,9 @@
 
 #include "kaykens_reminiszenz.h"
 #include "Log.h"
+#include <chrono>
 
-#ifdef DEBUG
-#define KR_DEBUG_SAY(me, text) do { (me)->Say(text, LANG_UNIVERSAL); } while (0)
-#define KR_DEBUG_YELL(me, text) do { (me)->Yell(text, LANG_UNIVERSAL); } while (0)
-#else
-#define KR_DEBUG_SAY(me, text) do {} while (0)
-#define KR_DEBUG_YELL(me, text) do {} while (0)
-#endif
+using namespace std::chrono_literals;
 
 struct PolydeucesWaypoint
 {
