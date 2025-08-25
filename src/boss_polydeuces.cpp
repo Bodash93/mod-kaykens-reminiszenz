@@ -4,8 +4,6 @@
  */
 
 #include "kaykens_reminiszenz.h"
-#include "Log.h"
-
 
 struct PolydeucesWaypoint
 {
@@ -21,8 +19,6 @@ public:
     {
         boss_polydeucesAI(Creature* creature) : ScriptedAI(creature)
         {
-            // ULTIMATE DEBUG - CONSTRUCTOR CALLED
-            me->Say("CONSTRUCTOR: ### NEUE KR MODULE VERSION 2.0 - POLYDEUCES LOADED ###", LANG_UNIVERSAL);
             
             _instance = me->GetInstanceScript();
             // Store original spawn position for Dione
@@ -32,8 +28,6 @@ public:
 
         void Initialize()
         {
-            // ULTIMATE DEBUG - UNIQUE STRING to identify OUR script
-            me->Yell("### NEUE KR MODULE VERSION 2.0 GELADEN ###", LANG_UNIVERSAL);
             
             _phase = PHASE_PREPARATION;
             _isFlying = false;
@@ -78,8 +72,6 @@ public:
 
         void Reset() override
         {
-            // ULTIMATE DEBUG - This WILL be called when boss resets
-            me->Say("ULTIMATE DEBUG: Polydeuces Reset() called!", LANG_UNIVERSAL);
             events.Reset();
             
             // Onyxia-style: Explicitly disable flight capabilities on reset
@@ -93,13 +85,10 @@ public:
 
         void JustEngagedWith(Unit* who) override
         {
-            // IMMEDIATE DEBUG - Test if our script runs at all
-            me->Say("DEBUG: POLYDEUCES SCRIPT IS RUNNING! Combat started!", LANG_UNIVERSAL);
             
             if (_phase == PHASE_PREPARATION)
             {
                 // Still in preparation - shouldn't happen but handle gracefully
-                me->Say("DEBUG: Still in preparation phase!", LANG_UNIVERSAL);
                 return;
             }
             
@@ -175,30 +164,21 @@ public:
 
         void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
         {
-            // DEBUG: Show HP percentage
-            me->Say("DEBUG: HP is " + std::to_string(me->GetHealthPct()) + "%", LANG_UNIVERSAL);
             
             // Only trigger flight phases during ground combat (PHASE_ONE)
             if (_phase != PHASE_ONE || _isFlying)
             {
-                me->Say("DEBUG: Wrong phase or already flying - phase=" + std::to_string(_phase) + " flying=" + std::to_string(_isFlying), LANG_UNIVERSAL);
                 return;
             }
                 
             // WOTLK-Style: Exactly two flight phases at 66% and 33%
             if (me->HealthBelowPctDamaged(66, damage) && !_firstFlightDone)
             {
-                me->Say("DEBUG: Triggering first flight phase at 66%!", LANG_UNIVERSAL);
                 StartFlightPhase();
             }
             else if (me->HealthBelowPctDamaged(33, damage) && _firstFlightDone && !_secondFlightDone)
             {
-                me->Say("DEBUG: Triggering second and FINAL flight phase at 33%!", LANG_UNIVERSAL);
                 StartFlightPhase();
-            }
-            else if (me->HealthBelowPctDamaged(33, damage) && _secondFlightDone)
-            {
-                me->Say("DEBUG: No more flight phases - staying on ground!", LANG_UNIVERSAL);
             }
         }
 
@@ -306,7 +286,6 @@ public:
                         break;
                     case EVENT_LANDING_FALLBACK:
                         // Fallback: Force landing completion if MovementInform didn't trigger
-                        me->Say("DEBUG: Landing fallback triggered!", LANG_UNIVERSAL);
                         CompleteLanding();
                         break;
                 }
@@ -396,7 +375,6 @@ public:
             _isFlying = true;
             
             // Start air phase sequence
-            me->Say("DEBUG: Starting air phase with Onyxia-style takeoff!", LANG_UNIVERSAL);
             OnAirPhaseReached();
         }
         
@@ -406,7 +384,6 @@ public:
             events.CancelEvent(EVENT_SPAWN_DIONE);
             
             // Start proper air phase sequence
-            me->Say("DEBUG: Air phase reached - starting events!", LANG_UNIVERSAL);
             me->Yell("Jetzt werdet ihr die wahre Macht der Drachen spüren!", LANG_UNIVERSAL);
             
             // Immediate Dione spawn
@@ -435,7 +412,6 @@ public:
             events.CancelEvent(EVENT_UNROOT);
             
             // Simplified flight phase start
-            me->Say("DEBUG: Flight phase starting!", LANG_UNIVERSAL);
             me->AttackStop();
             me->SetReactState(REACT_PASSIVE);
             me->GetMotionMaster()->Clear();
@@ -542,7 +518,6 @@ public:
                 return;
             }
             
-            me->Say("DEBUG: Waypoint " + std::to_string(waypointId) + " reached! Starting bombardment!", LANG_UNIVERSAL);
             
             // Start bombardment sequence when reaching waypoint
             if (_isFlying)
@@ -553,7 +528,6 @@ public:
                 
                 // Start first fireball immediately
                 events.ScheduleEvent(EVENT_FIREBALL_BOMBARDMENT, 500);
-                me->Say("DEBUG: Fireball bombardment started - " + std::to_string(_totalFireballs) + " fireballs!", LANG_UNIVERSAL);
             }
         }
 
@@ -579,8 +553,6 @@ public:
                 _currentDioneGUID = dione->GetGUID();
                 _dioneSpawned = true;
                 
-                // Debug output
-                me->Say("DEBUG: Dione spawned successfully!", LANG_UNIVERSAL);
                 
                 // Initialize Dione properly for combat
                 dione->SetReactState(REACT_AGGRESSIVE);
@@ -590,11 +562,9 @@ public:
                 if (Unit* target = dione->SelectNearestTarget(100.0f))
                 {
                     dione->AI()->AttackStart(target);
-                    me->Say("DEBUG: Dione attacking target!", LANG_UNIVERSAL);
                 }
                 else
                 {
-                    me->Say("DEBUG: Dione found no targets!", LANG_UNIVERSAL);
                 }
                 
                 // Start death checking after spawn is complete
@@ -606,8 +576,6 @@ public:
                 _dioneSpawned = false;
                 _currentDioneGUID.Clear();
                 
-                // Debug output
-                me->Say("DEBUG: Dione spawn failed! Retrying in 5 seconds...", LANG_UNIVERSAL);
                 events.ScheduleEvent(EVENT_SPAWN_DIONE, 5s); // Retry spawn
             }
         }
@@ -617,8 +585,6 @@ public:
             // Only check if we actually spawned Dione and are still flying
             if (!_dioneSpawned || !_isFlying || _currentDioneGUID.IsEmpty())
             {
-                // Debug: Why we stopped checking
-                me->Say("DEBUG: Stopped Dione death check", LANG_UNIVERSAL);
                 return;
             }
             
@@ -633,14 +599,10 @@ public:
                 }
                 else
                 {
-                    // Dione died - debug info
-                    me->Say("DEBUG: Dione died! Initiating landing...", LANG_UNIVERSAL);
                 }
             }
             else
             {
-                // Dione despawned - debug info  
-                me->Say("DEBUG: Dione despawned! Initiating landing...", LANG_UNIVERSAL);
             }
             
             // Dione is dead or despawned
@@ -668,7 +630,6 @@ public:
             me->Yell(PolydeucesTexts::SAY_LAND, LANG_UNIVERSAL);
             me->SendMeleeAttackStop(me->GetVictim());
             
-            me->Say("DEBUG: Initiating proper landing sequence!", LANG_UNIVERSAL);
             
             // Use proper MoveLand to home position like Onyxia
             Position homePos = me->GetHomePosition();
@@ -687,7 +648,6 @@ public:
             if (Unit* target = SelectTarget(SelectTargetMethod::Random))
             {
                 CastScaledSpell(target, SPELL_FIREBALL);
-                me->Say("DEBUG: Fireball " + std::to_string(_totalFireballs - _fireballsRemaining + 1) + "/" + std::to_string(_totalFireballs) + " fired!", LANG_UNIVERSAL);
                 _fireballsRemaining--;
                 
                 if (_fireballsRemaining > 0)
@@ -698,7 +658,6 @@ public:
                 else
                 {
                     // Bombardment finished - move to next waypoint
-                    me->Say("DEBUG: Bombardment completed! Moving to next waypoint...", LANG_UNIVERSAL);
                     events.ScheduleEvent(EVENT_NEXT_WAYPOINT, 2000); // Short delay before moving
                 }
             }
@@ -718,7 +677,6 @@ public:
             // Cancel any pending landing fallback
             events.CancelEvent(EVENT_LANDING_FALLBACK);
             
-            me->Say("DEBUG: Landing completed with proper MoveLand sequence!", LANG_UNIVERSAL);
             
             // No manual teleportation needed - MoveLand already positioned us correctly
             // Just disable flight capabilities like Onyxia
@@ -740,23 +698,19 @@ public:
             if (Unit* target = me->SelectVictim())
             {
                 AttackStart(target);
-                me->Say("DEBUG: Resuming combat with target!", LANG_UNIVERSAL);
             }
             
             // Track flight phases with proper progression
             if (!_firstFlightDone)
             {
                 _firstFlightDone = true;
-                me->Say("DEBUG: First flight phase completed! Next phase at 33% HP.", LANG_UNIVERSAL);
             }
             else if (!_secondFlightDone)
             {
                 _secondFlightDone = true;
-                me->Say("DEBUG: Second and FINAL flight phase completed! No more flying!", LANG_UNIVERSAL);
             }
             else
             {
-                me->Say("DEBUG: ERROR - Unexpected flight phase completion!", LANG_UNIVERSAL);
             }
             
             // Reset Dione variables
