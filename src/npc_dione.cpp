@@ -31,8 +31,6 @@ public:
             events.ScheduleEvent(EVENT_DIONE_FROSTBOLT1, urand(2000, 4000));  // Quicker first cast
             events.ScheduleEvent(EVENT_DIONE_FROSTBOLT2, urand(8000, 12000)); // Earlier strong attack
             
-            // Debug message
-            me->Say("Dione joins the battle!", LANG_UNIVERSAL);
         }
 
         void UpdateAI(uint32 diff) override
