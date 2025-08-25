@@ -23,9 +23,10 @@ public:
         void JustDied(Unit* /*killer*/) override
         {
             me->Yell(TreppenEventTexts::SAY_TRIGGER_DEATH, LANG_UNIVERSAL);
-            
-            // Spawn Portalmeister boss
+
+            // Spawn the Portalmeister boss and the spawner that handles add waves
             me->SummonCreature(NPC_PORTALMEISTER, -6974.344727f, -1094.695068f, 239.659103f, 5.062332f);
+            me->SummonCreature(NPC_PORTALMEISTER_SPAWNER, -6974.344727f, -1094.695068f, 239.659103f, 5.062332f);
         }
     };
 
@@ -216,15 +217,8 @@ public:
     }
 };
 
-// Specific scripts for each add type  
-class npc_treppen_add1 : public CreatureScript { public: npc_treppen_add1() : CreatureScript("npc_treppen_add1") { } CreatureAI* GetAI(Creature* creature) const override { return new npc_treppen_add::npc_treppen_addAI(creature); } };
-class npc_treppen_add2 : public CreatureScript { public: npc_treppen_add2() : CreatureScript("npc_treppen_add2") { } CreatureAI* GetAI(Creature* creature) const override { return new npc_treppen_add::npc_treppen_addAI(creature); } };
-class npc_treppen_add3 : public CreatureScript { public: npc_treppen_add3() : CreatureScript("npc_treppen_add3") { } CreatureAI* GetAI(Creature* creature) const override { return new npc_treppen_add::npc_treppen_addAI(creature); } };
-
 void AddSC_npc_treppen_event()
 {
     new npc_treppen_trigger();
-    new npc_treppen_add1();
-    new npc_treppen_add2();
-    new npc_treppen_add3();
+    new npc_treppen_add();
 }
