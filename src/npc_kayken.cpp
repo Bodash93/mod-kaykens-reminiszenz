@@ -10,6 +10,9 @@
 #include "ObjectMgr.h"
 #include "QuestDef.h"
 #include "TaskScheduler.h"
+#include <chrono>
+
+using namespace std::chrono_literals;
 
 // Kayken uses database-driven gossip menus (60000-60007)
 // Only Menu 60007 requires script intervention for teleportation
