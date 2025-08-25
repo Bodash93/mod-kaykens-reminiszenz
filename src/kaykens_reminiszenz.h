@@ -35,6 +35,7 @@ enum KRCreatures
     
     // Portalmeister Boss and related NPCs
     NPC_PORTALMEISTER           = 500011,
+    NPC_PORTALMEISTER_SPAWNER   = 500019,
     NPC_PORTAL_ADD1             = 500012,
     NPC_PORTAL_ADD2             = 500013,
     NPC_PORTAL_ADD3             = 500018,
