@@ -5,6 +5,14 @@
 
 #include "kaykens_reminiszenz.h"
 
+#ifdef DEBUG
+#define KR_DEBUG_SAY(me, text) do { (me)->Say(text, LANG_UNIVERSAL); } while (0)
+#define KR_DEBUG_YELL(me, text) do { (me)->Yell(text, LANG_UNIVERSAL); } while (0)
+#else
+#define KR_DEBUG_SAY(me, text) do {} while (0)
+#define KR_DEBUG_YELL(me, text) do {} while (0)
+#endif
+
 class npc_hexenmeister : public CreatureScript
 {
 public:
@@ -19,11 +27,14 @@ public:
 
         void Reset() override
         {
+            // ULTIMATE DEBUG - Test if Hexenmeister script runs
+            KR_DEBUG_SAY(me, "ULTIMATE DEBUG: Hexenmeister Reset() called!");
             
             events.Reset();
             
             // Clear any existing emotes before setting new ones
             me->HandleEmoteCommand(EMOTE_ONESHOT_NONE);
+            KR_DEBUG_SAY(me, "DEBUG: Emotes cleared on Reset!");
             
             CastDarkEnergyOnPolydeuces();
             // Start continuous dark energy casting
@@ -32,6 +43,8 @@ public:
         
         void JustEngagedWith(Unit* /*who*/) override
         {
+            // ULTIMATE DEBUG - Test if combat works
+            KR_DEBUG_SAY(me, "ULTIMATE DEBUG: Hexenmeister Combat started!");
             
             // Random modern C++ string yell
             uint8 randomYell = urand(1, 3);
@@ -56,6 +69,7 @@ public:
             
             // Explicitly clear casting emotes and set to combat stance
             me->HandleEmoteCommand(EMOTE_ONESHOT_NONE);
+            KR_DEBUG_SAY(me, "DEBUG: Emotes cleared for combat!");
             me->SetStandState(UNIT_STAND_STATE_STAND);
             
             events.ScheduleEvent(EVENT_SHADOW_BOLT, urand(2000, 4000));
@@ -68,6 +82,7 @@ public:
             
             // Clear emotes first, then set casting emote with delay for proper transition
             me->HandleEmoteCommand(EMOTE_ONESHOT_NONE);
+            KR_DEBUG_SAY(me, "DEBUG: Evade mode - emotes cleared, will resume casting!");
             
             // Delay the casting emote to avoid conflicts
             events.ScheduleEvent(EVENT_DARK_ENERGY_CAST, 2000); // Longer delay for stable transition
@@ -84,6 +99,7 @@ public:
                     
                     // Use Trial of Crusader style spell precast emote (more reliable)
                     me->HandleEmoteCommand(EMOTE_STATE_SPELL_PRECAST);
+                    KR_DEBUG_SAY(me, "DEBUG: Cast emote set - should see casting animation!");
                     
                     // Cast visual dark energy spell
                     DoCast(polydeuces, SPELL_DARK_ENERGY_VISUAL, true);
